@@ -14,6 +14,7 @@ import { MdOutlineAddCircleOutline } from "react-icons/md";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { MdOutlineAddLink } from "react-icons/md";
+import { FaFileVideo } from "react-icons/fa6";
 
 function CreateCourse() {
   const [step, setStep] = useState(1);
@@ -267,15 +268,31 @@ function CreateCourse() {
 
                       {subModule.type === 'video' && (
                         <div>
-                          <input
+                            <div className='mb-2 upload-box border-2 border-dashed border-gray-300 p-8 rounded-md gap-1 flex flex-col bg-[#f5f5f5]'>
+                            <FaFileVideo size={35} className='text-[#9835ff]' />
+                            <input
                             type="file"
-                            className="mb-2"
+                            className="hidden"
                             onChange={(e) => {
                               const updatedModules = [...curriculum];
                               updatedModules[index].subModules[subIndex].content = e.target.files[0];
                               setCurriculum(updatedModules);
+                                
                             }}
+                            id="video"
+                            accept="video/*"
                           />
+                        
+                      
+                            <label htmlFor="video" className="cursor-pointer text-[#404660] font-normal mt-4">
+                            <div>
+                         
+                          </div>
+                            {subModule.content ? subModule.content.name : 'Drag and Drop Video Here or Click to Browse'}
+                            </label>
+
+                            </div>
+                       
                           <input
                             type="text"
                             placeholder="Add Transcript"
@@ -285,7 +302,7 @@ function CreateCourse() {
                               updatedModules[index].subModules[subIndex].transcript = e.target.value;
                               setCurriculum(updatedModules);
                             }}
-                            className="mb-2 p-2 w-full border rounded"
+                            className="mb-2 p-2 w-full border rounded outline-none text-[#404660]"
                           />
                         </div>
                       )}
