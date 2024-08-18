@@ -58,4 +58,81 @@ body {
 .hide-scroll::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+.custom-steps {
+  font-family: poppins;
+  font-weight: 500;
+}
+.custom-steps .ant-steps-item-process .ant-steps-item-icon {
+  background-color: #9835ff;
+  border-color: #9835ff;
+}
 
+.custom-steps .ant-steps-item-process .ant-steps-item-icon .ant-steps-icon {
+  color: #fff;
+}
+
+.custom-steps .ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #9835ff;
+  border-color: #9835ff;
+}
+
+.custom-steps .ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
+  color: #fff;
+}
+
+.custom-steps .ant-steps-item::after {
+  border-color: #9835ff;
+}
+
+.custom-steps .ant-steps-item-process::after {
+  border-color: #9835ff;
+}
+
+.custom-steps .ant-steps-item-finish::after {
+  border-color: #9835ff;
+}
+
+.custom-radio {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.custom-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  
+}
+
+.custom-radio-box {
+  width: 20px;
+  height: 20px;
+  
+  border: 2px solid #9835ff;
+  border-radius: 4px;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.custom-radio input:checked + .custom-radio-box {
+  background-color: #9835ff;
+}
+
+.upload-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+/* Add this to your CSS file */
+.placeholder-white::placeholder {
+  color: rgb(226, 224, 224);
+}
