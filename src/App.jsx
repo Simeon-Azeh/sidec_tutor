@@ -6,6 +6,10 @@ import ForgotPassword from './pages/Authentication/ForgotPass';
 import Onboarding from './pages/Authentication/Onboarding';
 import Login from './pages/Authentication/Login';
 
+import Dashboard from './pages/Dashboard';
+import Courses from './pages/Courses';
+import CreateCourse from './pages/CreateCourse';
+
 
 
 function ScrollToTop() {
@@ -33,6 +37,9 @@ function App() {
           <Route path="/auth/register" element={<Register/>} />
           <Route path="/auth/forgotpassword" element={<ForgotPassword/>} />
           <Route path="/auth/onboarding" element={<Onboarding/>} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/courses' element={<Courses />} />
+          <Route path="/create-course" element={<CreateCourse />} />
         </Routes>
       </BrowserRouter>
     </>
