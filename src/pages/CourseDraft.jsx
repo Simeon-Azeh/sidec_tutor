@@ -26,6 +26,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Dropdown, Menu } from 'antd'; // Add this import for Ant Design's Dropdown
 import { IoEllipsisHorizontalOutline } from "react-icons/io5";
+import { MdOutlineLibraryAddCheck } from "react-icons/md";
+import { MdBroadcastOnHome } from "react-icons/md";
+import { LuUsers } from "react-icons/lu";
 
 function CourseDraft() {
   const navigate = useNavigate();
@@ -111,7 +114,7 @@ function CourseDraft() {
             </div>
           </div>
           <div className="flex gap-4 font-poppins mt-8">
-            <div className="w-[70%]">
+            <div className="w-[65%]">
               <h1 className="text-lg text-[#404660] font-medium">Basic info</h1>
               <div className="flex flex-col gap-2 mt-4">
                 <p className="text-base text-gray-500 font-medium">Course title</p>
@@ -195,7 +198,51 @@ function CourseDraft() {
                 </button>
               </div>
             </div>
-            <div></div>
+            <div className='w-[35%] bg-white p-4 rounded-md'>
+                <div className='bg-[#9835ff] p-4 rounded-md w-full'>
+                    <h1 className="text-lg text-white font-medium">Get Verified</h1>
+                    <p className='text-xs mb-2 text-white'>Reach more people with a verified batch</p>
+                    <button className="text-[#9835ff] text-sm font-medium shadow-sm px-3 py-1 rounded bg-white border-solid hover:translate-y-[-5px] duration-300 flex items-center gap-1">
+                      Get Verified
+                       
+                      </button>
+                </div>
+                <div className='w-full'>
+                    <h1 className="text-base text-gray-500 font-medium mt-4">Course Status</h1>
+                    <div className='flex items-center gap-2 w-full'>
+                    <p className="bg-[#9835ff] text-sm text-white font-medium px-3 py-1 rounded mt-1 flex items-center gap-1">
+                    <MdOutlineLibraryAddCheck size={20} />Approved</p>
+                    <p className="bg-[#9835ff] text-sm text-white font-medium px-3 py-1 rounded mt-1 flex items-center gap-1"><MdBroadcastOnHome size={20} />Live</p>
+                    <p className="bg-[#9835ff] text-sm text-white font-medium px-3 py-1 rounded mt-1 flex items-center gap-1"><LuUsers size={20} /> 34 </p>
+                    </div>
+                   <button className='text-white bg-red-400 text-sm font-medium shadow-sm px-3 py-2 rounded  flex items-center gap-1 mt-4 hover:translate-y-[-5px] duration-300'>
+                    Unpublish Course
+                   </button>
+                 
+                </div>
+                <div>
+                    <h1 className="text-base text-gray-500 font-medium mt-4">Course Level</h1>
+                    <div>
+                        <select className="w-full p-2 border border-[#404660]/50 rounded-md mt-1 outline-none text-[#404660] font-medium">
+                            <option>Advanced Level</option>
+                            <option>Ordinary Level</option>
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option selected>Advanced</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                <h1 className="text-base text-gray-500 font-medium mt-4">Course Category</h1>
+                    <div>
+                        <select className="w-full p-2 border border-[#404660]/50 rounded-md mt-1 outline-none text-[#404660] font-medium">
+                            <option>Science</option>
+                            <option>Arts</option>
+                            <option selected>Technology</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
           </div>
         </div>
       </div>
