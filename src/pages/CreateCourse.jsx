@@ -15,6 +15,10 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { MdOutlineAddLink } from "react-icons/md";
 import { FaFileVideo } from "react-icons/fa6";
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { GrDrag } from 'react-icons/gr'; // Import draggable icon
+import { RiDraggable } from "react-icons/ri";
+import { MdOutlineEditNote, MdOutlineDeleteSweep } from "react-icons/md";
 
 function CreateCourse() {
   const [step, setStep] = useState(1);
@@ -28,6 +32,9 @@ function CreateCourse() {
     cover: null,
   });
   const [curriculum, setCurriculum] = useState([]);
+  const [expandedModule, setExpandedModule] = useState(null);
+  
+  
 
   const handleNextStep = () => {
     setStep(step + 1);
@@ -42,6 +49,27 @@ function CreateCourse() {
       ...courseDetails,
       cover: e.target.files[0],
     });
+  };
+  const handleModuleChange = (index, field, value) => {
+    const updatedModules = [...curriculum];
+    updatedModules[index][field] = value;
+    setCurriculum(updatedModules);
+  };
+
+  const handleSubModuleChange = (moduleIndex, subModuleIndex, field, value) => {
+    const updatedModules = [...curriculum];
+    updatedModules[moduleIndex].subModules[subModuleIndex][field] = value;
+    setCurriculum(updatedModules);
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+    const updatedModules = Array.from(curriculum);
+    const [movedModule] = updatedModules.splice(source.index, 1);
+    updatedModules.splice(destination.index, 0, movedModule);
+    setCurriculum(updatedModules);
   };
 
   const steps = [
@@ -173,12 +201,14 @@ function CreateCourse() {
               </div>
 
               <div className="mb-4">
-                <label className="text-[#404660] font-medium text-base">Description:</label>
+                <label className="text-[#404660] font-medium text-base ">Description:</label>
+                <div className='w-full bg-white p-1 mt-2'>
                 <ReactQuill
                   value={courseDetails.description}
                   onChange={(value) => setCourseDetails({ ...courseDetails, description: value })}
-                  className="border rounded-md mt-2 outline-none font-poppins text-[#404660]"
+                  className="border rounded-md  outline-none font-poppins text-[#404660] bg-white "
                 />
+                </div>
               </div>
               <div className="mb-4">
                 <label className="text-[#404660] font-medium text-base">What students will learn:</label>
@@ -202,152 +232,199 @@ function CreateCourse() {
                   <MdOutlineAddCircleOutline className="text-[#9835ff]" />
                 </div>
               </div>
-              <button onClick={handleNextStep} className="bg-[#9835ff] text-white py-2 px-4 rounded-md">
-                Next
+              <button onClick={handleNextStep} className="bg-[#9835ff] text-white py-2 px-4 rounded-md flex justify-end ">
+                Next 
               </button>
             </div>
           )}
 
-          {step === 2 && (
+        {step === 2 && (
             <div>
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="curriculum" type="module">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
+                      {curriculum.map((module, index) => (
+                        <Draggable key={module.id} draggableId={module.id} index={index}>
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className="mb-4 bg-white p-4 rounded-md border border-gray-100 "
+                            >
+                              <div className="flex justify-between items-center w-[100%]">
+                                <input
+                                  type="text"
+                                  placeholder="| Module Title"
+                                  value={module.title}
+                                  onChange={(e) => handleModuleChange(index, 'title', e.target.value)}
+                                  className="mb-2 p-2 w-[60%] rounded outline-none   text-[#404660] font-medium  "
+                                />
+                                <div className="flex gap-2">
+                                  <button className="border text-[#404660] py-1 px-2 rounded-md flex items-center gap-1 font-medium w-[100%]">
+                                    Save Draft <MdOutlineEditNote size={20} className='text-[#404660]' />
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      const updatedModules = curriculum.filter((_, i) => i !== index);
+                                      setCurriculum(updatedModules);
+                                    }}
+                                    className="bg-red-400 text-white py-1 px-2 rounded-md flex items-center gap-1 font-medium"
+                                  >
+                                    Delete <MdOutlineDeleteSweep size={20} />
+                                  </button>
+                                  <button className='text-gray-400 cursor-grab '>
+                                  <RiDraggable size={25} />
+                                  </button>
+                                </div>
+                              </div>
+                              {module.subModules.length > 0 && (
+                                <div>
+                                  {module.subModules.map((subModule, subIndex) => (
+                                    <div key={subIndex} className="mb-4 border p-4 rounded">
+                                      <input
+                                        type="text"
+                                        placeholder="Submodule Title"
+                                        value={subModule.title}
+                                        onChange={(e) => handleSubModuleChange(index, subIndex, 'title', e.target.value)}
+                                        className="mb-2 p-2 w-full border rounded outline-none text-[#404660] font-medium"
+                                      />
+                                      <select
+                                        value={subModule.type}
+                                        onChange={(e) => handleSubModuleChange(index, subIndex, 'type', e.target.value)}
+                                        className="mb-2 p-2 w-full border rounded outline-none text-[#404660] font-medium text-base"
+                                      >
+                                        <option value="">Select Type</option>
+                                        <option value="video">Video Lesson</option>
+                                        <option value="text">Text Lesson</option>
+                                      </select>
+
+                                      {subModule.type === 'video' && (
+                                        <div>
+                                          <div className='mb-2 upload-box border-2 border-dashed border-gray-300 p-8 rounded-md gap-1 flex flex-col bg-[#f5f5f5]'>
+                                            <FaFileVideo size={35} className='text-[#9835ff]' />
+                                            <input
+                                              type="file"
+                                              className="hidden"
+                                              onChange={(e) => handleSubModuleChange(index, subIndex, 'content', e.target.files[0])}
+                                              id="video"
+                                              accept="video/*"
+                                            />
+                                            <label htmlFor="video" className="cursor-pointer text-[#404660] font-normal mt-4">
+                                              {subModule.content ? subModule.content.name : 'Drag and Drop Video Here or Click to Browse'}
+                                            </label>
+                                          </div>
+                                          <input
+                                            type="text"
+                                            placeholder="Add Transcript"
+                                            value={subModule.transcript}
+                                            onChange={(e) => handleSubModuleChange(index, subIndex, 'transcript', e.target.value)}
+                                            className="mb-2 p-2 w-full border rounded outline-none text-[#404660]"
+                                          />
+                                        </div>
+                                      )}
+
+                                      {subModule.type === 'text' && (
+                                        <div>
+                                          <ReactQuill
+                                            value={subModule.content}
+                                            onChange={(value) => handleSubModuleChange(index, subIndex, 'content', value)}
+                                            className="border rounded-md mb-2"
+                                          />
+                                          <div className='flex gap-2 items-center'>
+                                            <button
+                                              onClick={() => {
+                                                const updatedModules = [...curriculum];
+                                                updatedModules[index].subModules[subIndex].content += '<p></p>'; // Add a new paragraph
+                                                setCurriculum(updatedModules);
+                                              }}
+                                              className="bg-[#9835ff] text-white py-1 px-2 rounded-md flex items-center gap-1"
+                                            >
+                                              Add Paragraph <MdOutlinePostAdd />
+                                            </button>
+                                            <button
+                                              onClick={() => {
+                                                const updatedModules = [...curriculum];
+                                                updatedModules[index].subModules[subIndex].content += '<img src="" alt="Image" />'; // Add an image
+                                                setCurriculum(updatedModules);
+                                              }}
+                                              className="bg-[#9835ff] text-white py-1 px-2 rounded-md flex items-center gap-1"
+                                            >
+                                              Add Image <BiSolidImageAdd />
+                                            </button>
+                                            <button
+                                              onClick={() => {
+                                                const updatedModules = [...curriculum];
+                                                updatedModules[index].subModules[subIndex].content += '<a href="#">Link</a>'; // Add a link
+                                                setCurriculum(updatedModules);
+                                              }}
+                                              className="bg-[#9835ff] text-white py-1 px-2 rounded-md flex items-center gap-1"
+                                            >
+                                              Add Link <MdOutlineAddLink />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              <button
+                                onClick={() => {
+                                  const updatedModules = [...curriculum];
+                                  updatedModules[index].subModules.push({
+                                    title: '',
+                                    content: '',
+                                    type: '',
+                                  });
+                                  setCurriculum(updatedModules);
+                                }}
+                                className="border text-[#404660] border-[#404660]/40 border-solid py-2 px-4 rounded-md flex items-center gap-1"
+                              >
+                                Add Submodule <MdOutlineAddCircleOutline />
+                              </button>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+
               <button
-                onClick={() => setCurriculum([...curriculum, { title: '', subModules: [] }])}
-                className="bg-[#9835ff] text-white py-2 px-4 rounded-md mb-4 flex items-center gap-1"
+                onClick={() => {
+                  const newModule = {
+                    id: `module-${curriculum.length + 1}`, // Unique ID for draggable
+                    title: '',
+                    subModules: [],
+                  };
+                  setCurriculum([...curriculum, newModule]);
+                }}
+                className="bg-[#9835ff] text-white py-2 px-4 rounded-md flex items-center gap-1"
               >
                 Add Module <MdOutlineAddCircleOutline />
               </button>
-              {curriculum.map((module, index) => (
-                <div key={index} className="mb-4 bg-white p-4 rounded">
-                  <input
-                    type="text"
-                    placeholder="| Module Title..."
-                    value={module.title}
-                    onChange={(e) => {
-                      const updatedModules = [...curriculum];
-                      updatedModules[index].title = e.target.value;
-                      setCurriculum(updatedModules);
-                    }}
-                    className="mb-2 p-2 w-full rounded outline-none placeholder-white bg-[#9835ff] text-white"
-                  />
-                  <button
-                    onClick={() => {
-                      const updatedModules = [...curriculum];
-                      updatedModules[index].subModules.push({ title: '', type: '', content: '', transcript: '' });
-                      setCurriculum(updatedModules);
-                    }}
-                    className="bg-transparent text-[#404660] border border-[#404660]/60 py-2 px-4 rounded-md mb-2 flex items-center gap-1"
-                  >
-                    Add Submodule <MdOutlineAddCircleOutline />
-                  </button>
-                  {module.subModules.map((subModule, subIndex) => (
-                    <div key={subIndex} className="mb-4 border p-4 rounded ">
-                      <input
-                        type="text"
-                        placeholder="Submodule Title"
-                        value={subModule.title}
-                        onChange={(e) => {
-                          const updatedModules = [...curriculum];
-                          updatedModules[index].subModules[subIndex].title = e.target.value;
-                          setCurriculum(updatedModules);
-                        }}
-                        className="mb-2 p-2 w-full border rounded outline-none text-[#404660]"
-                      />
-                      <select
-                        value={subModule.type}
-                        onChange={(e) => {
-                          const updatedModules = [...curriculum];
-                          updatedModules[index].subModules[subIndex].type = e.target.value;
-                          setCurriculum(updatedModules);
-                        }}
-                        className="mb-2 p-2 w-full border rounded outline-none text-[#404660]"
-                      >
-                        <option value="">Select Type</option>
-                        <option value="video">Video Lesson</option>
-                        <option value="text">Text Lesson</option>
-                      </select>
-
-                      {subModule.type === 'video' && (
-                        <div>
-                            <div className='mb-2 upload-box border-2 border-dashed border-gray-300 p-8 rounded-md gap-1 flex flex-col bg-[#f5f5f5]'>
-                            <FaFileVideo size={35} className='text-[#9835ff]' />
-                            <input
-                            type="file"
-                            className="hidden"
-                            onChange={(e) => {
-                              const updatedModules = [...curriculum];
-                              updatedModules[index].subModules[subIndex].content = e.target.files[0];
-                              setCurriculum(updatedModules);
-                                
-                            }}
-                            id="video"
-                            accept="video/*"
-                          />
-                        
-                      
-                            <label htmlFor="video" className="cursor-pointer text-[#404660] font-normal mt-4">
-                            <div>
-                         
-                          </div>
-                            {subModule.content ? subModule.content.name : 'Drag and Drop Video Here or Click to Browse'}
-                            </label>
-
-                            </div>
-                       
-                          <input
-                            type="text"
-                            placeholder="Add Transcript"
-                            value={subModule.transcript}
-                            onChange={(e) => {
-                              const updatedModules = [...curriculum];
-                              updatedModules[index].subModules[subIndex].transcript = e.target.value;
-                              setCurriculum(updatedModules);
-                            }}
-                            className="mb-2 p-2 w-full border rounded outline-none text-[#404660]"
-                          />
-                        </div>
-                      )}
-
-                      {subModule.type === 'text' && (
-                        <div>
-                          <ReactQuill
-                            value={subModule.content}
-                            onChange={(value) => {
-                              const updatedModules = [...curriculum];
-                              updatedModules[index].subModules[subIndex].content = value;
-                              setCurriculum(updatedModules);
-                            }}
-                            className="border rounded-md mb-2 "
-                          />
-                          <div className='flex gap-2 items-center'>
-                          <button className="bg-[#9835ff] text-white py-1 px-2 rounded-md flex items-center gap-1">
-                            Add Paragraph <MdOutlinePostAdd />
-                          </button>
-                          <button className="bg-[#9835ff] text-white py-1 px-2 rounded-md flex items-center gap-1">
-                            Add Image <BiSolidImageAdd />
-                          </button>
-                          <button className="bg-[#9835ff] text-white py-1 px-2 rounded-md flex items-center gap-1">
-                            Add Link <MdOutlineAddLink />
-                          </button>
-                          </div>
-                         
-                         
-                        
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))}
-              <div className="flex justify-between">
-                <button onClick={handlePreviousStep} className="bg-gray-400 text-white py-2 px-4 rounded-md">
+              <div className='flex gap-4 mt-4 justify-end'>
+                <button
+                  onClick={handlePreviousStep}
+                  className="border border-[#404660]/60 text-[#404660] py-2 px-4 rounded-md"
+                >
                   Previous
                 </button>
                 <button onClick={handleNextStep} className="bg-[#9835ff] text-white py-2 px-4 rounded-md">
-                  Next
-                </button>
+                Next
+              </button>
               </div>
+            
             </div>
           )}
+
 
           {step === 3 && (
             <div>
