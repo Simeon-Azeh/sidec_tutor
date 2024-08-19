@@ -19,6 +19,8 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { GrDrag } from 'react-icons/gr'; // Import draggable icon
 import { RiDraggable } from "react-icons/ri";
 import { MdOutlineEditNote, MdOutlineDeleteSweep } from "react-icons/md";
+import { FiAlertCircle } from "react-icons/fi";
+
 
 function CreateCourse() {
   const [step, setStep] = useState(1);
@@ -426,57 +428,87 @@ function CreateCourse() {
           )}
 
 
-          {step === 3 && (
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Review Your Course</h2>
-              <div className="mb-4">
-                <h3 className="text-base font-medium">Course Title:</h3>
-                <p>{courseDetails.title}</p>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-base font-medium">Category:</h3>
-                <p>{courseDetails.category}</p>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-base font-medium">Level:</h3>
-                <p>{courseDetails.level}</p>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-base font-medium">Description:</h3>
-                <div
-                  dangerouslySetInnerHTML={{ __html: courseDetails.description }}
-                  className="border rounded-md p-2"
-                ></div>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-base font-medium">Learning Outcomes:</h3>
-                <ul className="list-disc pl-6">
-                  {courseDetails.learningOutcomes.map((outcome, index) => (
-                    <li key={index}>{outcome}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mb-4">
-                <h3 className="text-base font-medium">Curriculum:</h3>
-                {curriculum.map((module, index) => (
-                  <div key={index}>
-                    <h4 className="font-semibold">{module.title}</h4>
-                    <ul className="list-disc pl-6">
-                      {module.subModules.map((subModule, subIndex) => (
-                        <li key={subIndex}>
-                          <strong>{subModule.title}:</strong>{' '}
-                          {subModule.type === 'video' ? 'Video Lesson' : 'Text Lesson'}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              <button className="bg-[#9835ff] text-white py-2 px-4 rounded-md">
-                Publish Course
-              </button>
-            </div>
-          )}
+{step === 3 && (
+  <div className="w-full mx-auto p-4 bg-white rounded-md ">
+    <h2 className="text-lg font-medium mb-4 text-[#404660]">Review Your Course</h2>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660]">Course Title:</h3>
+      <p className="text-gray-600">| {courseDetails.title}</p>
+    </div>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660]">Category:</h3>
+      <p className="text-gray-600">| {courseDetails.category}</p>
+    </div>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660]">Level:</h3>
+      <p className="text-gray-600">| {courseDetails.level}</p>
+    </div>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660]">Description:</h3>
+      <div
+        dangerouslySetInnerHTML={{ __html: courseDetails.description }}
+        className="border rounded-md p-2 text-gray-600"
+      ></div>
+    </div>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660]">Learning Outcomes:</h3>
+      <ul className="list-disc pl-6 text-gray-600">
+        {courseDetails.learningOutcomes.map((outcome, index) => (
+          <li key={index}>{outcome}</li>
+        ))}
+      </ul>
+    </div>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660]">Curriculum:</h3>
+      {curriculum.map((module, index) => (
+        <div key={index}>
+          <h4 className="font-medium text-[#404660]">| {module.title}</h4>
+          <ul className="list-disc pl-6 text-gray-600">
+            {module.subModules.map((subModule, subIndex) => (
+              <li key={subIndex}>
+                <h2 className='text-[#404660] font-medium'>{subModule.title}:</h2>{' '}
+                {subModule.type === 'video' ? 'Video Lesson' : 'Text Lesson'}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div className="mb-4">
+      <h3 className="text-base font-medium text-[#404660] ">Price Range:</h3>
+      <input
+        type="number"
+        min="0"
+        max="1000"
+        step="10"
+        className="w-full p-2 pl-5 text-sm text-gray-700 outline-none"
+        placeholder="| FREE"
+        disabled
+      />
+      <div className='flex items-center gap-2 mt-4 bg-[#9835ff]/80 rounded p-2 '>
+      <FiAlertCircle size={20} color='#fff' />
+        <p className='text-white'> Subscribe to add custom price</p>
+        <a href="#" className='text-[#9835ff] bg-white px-2 py-1 rounded flex justify-end text-xs font-medium'>Learn More</a>
+      </div>
+    </div>
+    
+    <div className='flex gap-4'>
+    <button
+      className="bg-transparent text-[#404660] border border-[#404660]/50 py-2 px-4 rounded-md hover:translate-y-[-5px] transition duration-300 ease-in-out"
+      onClick={() => console.log('Publish Course')}
+    >
+      Safe Draft
+    </button>
+    <button
+      className="bg-[#9835ff] text-white py-2 px-4 rounded-md hover:translate-y-[-5px] transition duration-300  ease-in-out"
+      onClick={() => console.log('Publish Course')}
+    >
+      Publish Course
+    </button>
+    </div>
+  
+  </div>
+)}
         </div>
       </div>
     </div>
