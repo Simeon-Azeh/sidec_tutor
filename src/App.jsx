@@ -9,6 +9,7 @@ import Login from './pages/Authentication/Login';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import CreateCourse from './pages/CreateCourse';
+import CourseDraft from './pages/CourseDraft';
 
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/courses' element={<Courses />} />
           <Route path="/create-course" element={<CreateCourse />} />
+          <Route path="/courses/draft" element={<CourseDraft />} />
         </Routes>
       </BrowserRouter>
     </>

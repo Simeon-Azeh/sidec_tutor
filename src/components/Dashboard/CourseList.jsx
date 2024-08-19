@@ -15,15 +15,7 @@ const courses = [
     rating: 4.5,
     ratingCount: 150,
   },
-  {
-    image: 'https://e0.pxfuel.com/wallpapers/927/700/desktop-wallpaper-js-react-js.jpg',
-    title: 'React Basics',
-    description: 'Get started with React and learn the basics in this beginner-friend...',
-    status: { title: 'Intermediate', icon: <TbAntennaBars4 size={20} /> },
-    time: '3 hours',
-    rating: 4.0,
-    ratingCount: 200,
-  },
+ 
   {
     image: 'https://cdn.vectorstock.com/i/500p/66/88/history-textbook-on-school-chalkboard-background-vector-47556688.jpg',
     title: 'History for A-Levels',
@@ -33,15 +25,7 @@ const courses = [
     rating: 3.8,
     ratingCount: 75,
   },
-  {
-    image: 'https://cdn.vectorstock.com/i/500p/66/88/history-textbook-on-school-chalkboard-background-vector-47556688.jpg',
-    title: 'History for A-Levels',
-    description: 'Explore the key events and figures in history that shaped the moder...',
-    status: { title: 'Beginner', icon: <TbAntennaBars3 size={20}/> },
-    time: '4 hours',
-    rating: 3.8,
-    ratingCount: 75,
-  },
+ 
 ];
 
 const CourseList = () => {

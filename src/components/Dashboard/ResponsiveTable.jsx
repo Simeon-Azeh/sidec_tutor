@@ -36,7 +36,7 @@ const ResponsiveTable = () => {
   return (
     <div className='bg-white py-6 mt-6 font-poppins border rounded-md'>
       <div className='flex justify-between px-4 mb-2'>
-        <h1 className='text-lg font-medium text-[#404660]'>Your Hosted Courses</h1> 
+        <h1 className='text-lg font-medium text-[#404660]'>Your Courses</h1> 
         <a href='' className='text-sm text-gray-500 border py-1 px-3 cursor-pointer rounded hover:translate-y-[-5px] duration-300'>View all</a>
       </div>
       <div className="overflow-x-auto px-4">
