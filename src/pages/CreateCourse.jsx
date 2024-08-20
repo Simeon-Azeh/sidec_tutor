@@ -535,7 +535,7 @@ const ListInput = ({ value, onChange }) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="p-2 w-full border rounded-md mt-2 text-sm font-light outline-none"
+          className="p-2 w-full border rounded-md mt-2 text-sm font-normal outline-none"
           placeholder="Add learning outcomes (press Enter to add)"
         />
         <ul>

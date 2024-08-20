@@ -9,6 +9,10 @@ import { MdOutlineDashboardCustomize, MdOutlineQuiz, MdOutlineChatBubbleOutline 
 import { IoBookOutline } from 'react-icons/io5';
 import { RiSettings4Line } from 'react-icons/ri';
 import { IoMdHelpCircleOutline } from 'react-icons/io';
+import { CiSearch } from "react-icons/ci";
+import { SiListmonk } from "react-icons/si";
+import { FaRegCheckCircle } from 'react-icons/fa';
+import { RiAddCircleLine } from "react-icons/ri";
 
 function CreateQuiz() {
     const navigate = useNavigate();
@@ -16,6 +20,7 @@ function CreateQuiz() {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [selectedModule, setSelectedModule] = useState(null);
     const [questions, setQuestions] = useState([]);
+    const [quizInstructions, setQuizInstructions] = useState([]);
 
     const steps = [
         { title: 'Select Course' },
@@ -44,68 +49,100 @@ function CreateQuiz() {
         switch (step) {
             case 0:
                 return (
-                    <div>
-                        <input type="text" placeholder="Search courses..." className="w-full p-2 mb-4 border rounded" />
-                        <div className="flex gap-4">
+                    <div className=" font-poppins lg:w-5/6 mx-auto bg-white p-4 rounded ">
+                        <div className='font-poppins relative'>
+                           
+                            <p className='text-[#404660] text-base mb-3'>Select the course you want to create a quiz for</p>
+                            <CiSearch size={40} className='text-[#404660] absolute top-10 left-0 font-medium bg-[#F2F2F2] p-2 rounded' />
+                        <input type="text" placeholder="Search courses..." className="w-full py-3 mb-4 border rounded px-12 outline-none text-[#404660]" />
+                        </div>
+                        <p className='text-gray-500 mb-4 text-sm'>2 active courses found</p>
+                     
+                        <div className="">
                             <div
-                                className={`p-4 border rounded cursor-pointer ${selectedCourse === 'Course 1' ? 'bg-blue-100' : ''}`}
+                                className={`p-4  cursor-pointer border-b rounded border-b-[#404660]/20 flex ${selectedCourse === 'Course 1' ? 'bg-[#9835ff]/10' : ''}`}
                                 onClick={() => handleCourseSelect('Course 1')}
                             >
-                                Course 1
+                                <div className='w-14 h-14 '>
+                                    <img src="https://i.pinimg.com/736x/71/ee/32/71ee32577432648f9e45fbd63b2cf261.jpg" alt="" className='w-full object-cover h-full rounded' />
+                                </div>
+                               <div className='ml-4'>
+                                    <h1 className="text-base font-medium text-[#404660]">Advanced Javascript</h1>
+                                    <p className="text-sm text-gray-500">Dive deeper into web development with Javascrip...</p>
+                               </div>
                             </div>
                             <div
-                                className={`p-4 border rounded cursor-pointer ${selectedCourse === 'Course 2' ? 'bg-blue-100' : ''}`}
+                                className={`p-4  cursor-pointer border-b rounded border-b-[#404660]/20 flex ${selectedCourse === 'Course 2' ? 'bg-[#9835ff]/10' : ''}`}
                                 onClick={() => handleCourseSelect('Course 2')}
                             >
-                                Course 2
+                                <div className='w-14 h-14 '>
+                                    <img src="https://cdn.vectorstock.com/i/500p/66/88/history-textbook-on-school-chalkboard-background-vector-47556688.jpg" alt="" className='w-full object-cover h-full rounded' />
+                                </div>
+                               <div className='ml-4'>
+                                    <h1 className="text-base font-medium text-[#404660]">History for A-Levels</h1>
+                                    <p className="text-sm text-gray-500">Explore the key events and figures in history that shaped the moder...</p>
+                               </div>
                             </div>
                         </div>
                     </div>
                 );
             case 1:
                 return (
-                    <div className="flex gap-4">
+                    <div className=" font-poppins lg:w-5/6 mx-auto bg-white p-4 rounded">
+                        <p className='text-[#404660] text-base mb-3'>Select the module you want to create a quiz for</p>
                         <div
-                            className={`p-4 border rounded cursor-pointer ${selectedModule === 'Module 1' ? 'bg-blue-100' : ''}`}
+                            className={`p-4 border-b  rounded cursor-pointer ${selectedModule === 'Module 1' ? 'bg-[#9835ff]/10' : ''}`}
                             onClick={() => handleModuleSelect('Module 1')}
                         >
-                            Module 1
+                            <div>
+                            <h1 className='text-base font-medium text-[#404660] flex items-center gap-2'><SiListmonk size={8} />Introduction</h1>
+                            <p className='text-sm text-gray-500 pl-6'>| 4 submodules</p>
+                            </div>
+                          
                         </div>
                         <div
-                            className={`p-4 border rounded cursor-pointer ${selectedModule === 'Module 2' ? 'bg-blue-100' : ''}`}
+                            className={`p-4 border-b  rounded cursor-pointer ${selectedModule === 'Module 2' ? 'bg-[#9835ff]/10' : ''}`}
                             onClick={() => handleModuleSelect('Module 2')}
                         >
-                            Module 2
+                            <div>
+                            <h1 className='text-base font-medium text-[#404660] flex items-center gap-2'><SiListmonk size={8} />Basics</h1>
+                            <p className='text-sm text-gray-500 pl-6'>| 2 submodules</p>
+                            </div>
+                          
                         </div>
                     </div>
                 );
             case 2:
                 return (
-                    <div>
+                    <div className='font-poppins lg:w-5/6 mx-auto bg-white p-4 rounded'>
                         <div className="mb-4">
-                            <label className="block mb-2">Quiz Name</label>
-                            <input type="text" className="w-full p-2 border rounded" />
+                            <label className="block mb-2 text-base font-medium text-[#404660]">Quiz title</label>
+                            <input type="text" className="w-full p-2 border rounded border-[#404660]/20 outline-none" />
                         </div>
                         <div className="mb-4">
-                            <label className="block mb-2">Description</label>
+                            <label className="block mb-2 text-base font-medium text-[#404660]">Description</label>
                             <ReactQuill theme="snow" />
                         </div>
                         <div className="mb-4">
+      <label className="text-[#404660] font-medium text-base">What students will learn:</label>
+      <ListInput value={quizInstructions} onChange={(newInstructions) => setQuizInstructions(newInstructions)} />
+    </div>
+                        <div className="mb-4">
                             <label className="block mb-2">Time (in minutes)</label>
-                            <input type="number" className="w-full p-2 border rounded" />
+                            <input type="number" className="w-full p-2 border rounded outline-none text-[#404660] font-medium" />
                         </div>
                     </div>
                 );
             case 3:
                 return (
-                    <div>
+                    <div className='font-poppins lg:w-5/6 mx-auto bg-white p-4 rounded'>
                         {questions.map((question, index) => (
                             <div key={index} className="mb-4 p-4 border rounded">
                                 <div className="mb-2">
-                                    <label className="block mb-1">Question Title</label>
+                                    <label className="block mb-1 text-[#404660] font-medium text-base">Question Title</label>
                                     <input
                                         type="text"
-                                        className="w-full p-2 border rounded"
+                                        className="w-full p-2 border rounded outline-none text-[#404660] font-medium"
                                         value={question.title}
                                         onChange={(e) => {
                                             const newQuestions = [...questions];
@@ -115,10 +152,10 @@ function CreateQuiz() {
                                     />
                                 </div>
                                 <div className="mb-2">
-                                    <label className="block mb-1">Points</label>
+                                    <label className="block mb-1 text-[#404660] font-medium text-base">Points</label>
                                     <input
                                         type="number"
-                                        className="w-full p-2 border rounded"
+                                        className="w-full p-2 border rounded text-[#404660] font-medium outline-none"
                                         value={question.points}
                                         onChange={(e) => {
                                             const newQuestions = [...questions];
@@ -128,9 +165,9 @@ function CreateQuiz() {
                                     />
                                 </div>
                                 <div className="mb-2">
-                                    <label className="block mb-1">Answer Type</label>
+                                    <label className="block mb-1 text-[#404660] font-medium text-base">Answer Type</label>
                                     <select
-                                        className="w-full p-2 border rounded"
+                                        className="w-full p-2 border rounded text-[#404660] font-medium outline-none"
                                         value={question.type}
                                         onChange={(e) => {
                                             const newQuestions = [...questions];
@@ -153,30 +190,34 @@ function CreateQuiz() {
                                                 newQuestions[index].options.push('');
                                                 setQuestions(newQuestions);
                                             }}
-                                            className="bg-blue-500 text-white px-4 py-2 rounded mb-2"
+                                            className="bg-transparent text-[#404660] border border-[#404660]/50 font-medium px-4 py-2 rounded mb-2 flex items-center gap-1"
                                         >
-                                            Add Answer
+                                            Add Answer <RiAddCircleLine size={20} />
                                         </button>
                                         {question.options.map((option, optIndex) => (
-                                            <div key={optIndex} className="mb-2">
-                                                <label className="block mb-1">{String.fromCharCode(65 + optIndex)}</label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full p-2 border rounded"
-                                                    value={option}
-                                                    onChange={(e) => {
-                                                        const newQuestions = [...questions];
-                                                        newQuestions[index].options[optIndex] = e.target.value;
-                                                        setQuestions(newQuestions);
-                                                    }}
-                                                />
-                                            </div>
+                                           <div key={optIndex} className="mb-2 flex items-center">
+                                           <label
+                                             className="bg-[#9835ff] text-white px-3 py-2 rounded-l-md"
+                                           >
+                                             {String.fromCharCode(65 + optIndex)}
+                                           </label>
+                                           <input
+                                             type="text"
+                                             className="w-full p-2 border border-[#9835ff] rounded-r-md outline-none text-[#404660] font-medium"
+                                             value={option}
+                                             onChange={(e) => {
+                                               const newQuestions = [...questions];
+                                               newQuestions[index].options[optIndex] = e.target.value;
+                                               setQuestions(newQuestions);
+                                             }}
+                                           />
+                                         </div>
                                         ))}
                                         <div className="mb-2">
-                                            <label className="block mb-1">Correct Answer</label>
+                                            <label className="block mb-1 text-[#404660] font-medium text-base">Correct Answer</label>
                                             <input
                                                 type="text"
-                                                className="w-full p-2 border rounded"
+                                                className="w-full p-2 border rounded outline-none text-[#404660] font-medium"
                                                 value={question.correctAnswer}
                                                 onChange={(e) => {
                                                     const newQuestions = [...questions];
@@ -195,15 +236,15 @@ function CreateQuiz() {
                                                 newQuestions[index].options.push('');
                                                 setQuestions(newQuestions);
                                             }}
-                                            className="bg-blue-500 text-white px-4 py-2 rounded mb-2"
+                                            className="bg-transparent text-[#404660] border border-[#404660]/50 font-medium px-4 py-2 rounded mb-2 flex items-center gap-1"
                                         >
-                                            Add Option
+                                            Add Option <RiAddCircleLine size={20} />
                                         </button>
                                         {question.options.map((option, optIndex) => (
                                             <div key={optIndex} className="mb-2">
                                                 <input
                                                     type="text"
-                                                    className="w-full p-2 border rounded"
+                                                    className="w-full p-2 border rounded outline-none text-[#404660] font-medium"
                                                     value={option}
                                                     onChange={(e) => {
                                                         const newQuestions = [...questions];
@@ -214,10 +255,10 @@ function CreateQuiz() {
                                             </div>
                                         ))}
                                         <div className="mb-2">
-                                            <label className="block mb-1">Correct Answers</label>
+                                            <label className="block mb-1 text-[#404660] font-medium text-base">Correct Answers</label>
                                             <input
                                                 type="text"
-                                                className="w-full p-2 border rounded"
+                                                className="w-full p-2 border rounded outline-none text-[#404660] font-medium" 
                                                 placeholder="Separate multiple correct answers with commas"
                                                 onChange={(e) => {
                                                     const newQuestions = [...questions];
@@ -230,10 +271,10 @@ function CreateQuiz() {
                                 )}
                                 {question.type === 'essay' && (
                                     <div className="mb-2">
-                                        <label className="block mb-1">Key Words for Automatic Grading</label>
+                                        <label className="block mb-1 text-[#404660] font-medium text-base">Key Words for Automatic Grading</label>
                                         <input
                                             type="text"
-                                            className="w-full p-2 border rounded"
+                                            className="w-full p-2 border rounded outline-none text-[#404660] font-medium"
                                             value={question.correctAnswer}
                                             onChange={(e) => {
                                                 const newQuestions = [...questions];
@@ -244,7 +285,7 @@ function CreateQuiz() {
                                     </div>
                                 )}
                                 <div className="mb-2">
-                                    <label className="block mb-1">Answer Explanation (Optional)</label>
+                                    <label className="block mb-1 text-[#404660] font-medium text-base">Answer Explanation (Optional)</label>
                                     <ReactQuill theme="snow" />
                                 </div>
                                 <div className="mb-2">
@@ -254,9 +295,9 @@ function CreateQuiz() {
                                             newQuestions[index].image = '';
                                             setQuestions(newQuestions);
                                         }}
-                                        className="bg-blue-500 text                                            -white px-4 py-2 rounded"
+                                        className="bg-transparent text-[#404660] border border-[#404660]/50 font-medium px-4 py-2 rounded mb-2 flex items-center gap-1"
                                     >
-                                        Add Image
+                                        Add Image <RiAddCircleLine size={20} />
                                     </button>
                                     {question.image && (
                                         <div className="mt-2">
@@ -276,9 +317,9 @@ function CreateQuiz() {
                         ))}
                         <button
                             onClick={addQuestion}
-                            className="bg-green-500 text-white px-4 py-2 rounded"
+                            className="bg-[#9835ff] text-white px-4 py-2 rounded flex items-center gap-1"
                         >
-                            Add Question
+                            Add Question <RiAddCircleLine size={20} />
                         </button>
                     </div>
                 );
@@ -327,10 +368,10 @@ function CreateQuiz() {
             <SidebarItem icon={<MdOutlineDashboardCustomize size={20} />} text="Dashboard"  />
           </Link>
           <Link to="/courses">
-            <SidebarItem icon={<IoBookOutline size={20} />} text="Courses" alert active />
+            <SidebarItem icon={<IoBookOutline size={20} />} text="Courses" alert  />
           </Link>
           <Link to="/quizzes">
-            <SidebarItem icon={<MdOutlineQuiz size={20} />} text="Quizzes" alert />
+            <SidebarItem icon={<MdOutlineQuiz size={20} />} text="Quizzes" alert active/>
           </Link>
          
           <Link to="/messages">
@@ -350,17 +391,17 @@ function CreateQuiz() {
           <Navbar />
         </div>
                 <div className="px-8 py-6 lg:pl-16">
-                    <Steps current={current} onChange={setCurrent}>
+                    <Steps current={current} onChange={setCurrent} className='custom-steps'>
                         {steps.map((item) => (
-                            <Steps.Step key={item.title} title={item.title} className='custom-steps_two' />
+                            <Steps.Step key={item.title} title={item.title}  />
                         ))}
                     </Steps>
                     <div className="mt-6">{renderStepContent(current)}</div>
-                    <div className="flex justify-between mt-6">
-                        <button onClick={prev} disabled={current === 0} className="bg-gray-500 text-white px-4 py-2 rounded">
+                    <div className="flex justify-between mt-6 font-poppins">
+                        <button onClick={prev} disabled={current === 0} className="bg-transparent border border-[#404660]/50 border-solid text-[#404660] px-4 py-2 rounded ">
                             Previous
                         </button>
-                        <button onClick={next} disabled={current === steps.length - 1} className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <button onClick={next} disabled={current === steps.length - 1} className="bg-[#9835ff] text-white px-4 py-2 rounded">
                             Next
                         </button>
                     </div>
@@ -369,6 +410,39 @@ function CreateQuiz() {
         </div>
     );
 }
+
+// ListInput component definition
+const ListInput = ({ value, onChange }) => {
+    const [inputValue, setInputValue] = useState('');
+  
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        onChange([...value, inputValue]);
+        setInputValue('');
+      }
+    };
+  
+    return (
+      <div>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyPress={handleKeyPress}
+          className="p-2 w-full border rounded-md mt-2 text-sm font-normald outline-none"
+          placeholder="Add Quiz Instructions (press Enter to add)"
+        />
+        <ul>
+          {value.map((item, index) => (
+            <li key={index} className="flex items-center mb-2 mt-2 text-[#404660]">
+              <FaRegCheckCircle  className="mr-2 text-[#9835ff]" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
 
 export default CreateQuiz;
 
