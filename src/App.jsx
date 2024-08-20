@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import CreateCourse from './pages/CreateCourse';
 import CourseDraft from './pages/CourseDraft';
+import Quiz from './pages/Quiz';
+import CreateQuiz from './pages/CreateQuiz';
 
 
 
@@ -42,6 +44,8 @@ function App() {
           <Route path='/courses' element={<Courses />} />
           <Route path="/create-course" element={<CreateCourse />} />
           <Route path="/courses/draft" element={<CourseDraft />} />
+          <Route path='/quizzes' element={<Quiz />} />
+          <Route path='/create-quiz' element={<CreateQuiz />} />
         </Routes>
       </BrowserRouter>
     </>

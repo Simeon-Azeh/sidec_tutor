@@ -58,6 +58,18 @@ body {
 .hide-scroll::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+.custom-steps_two {
+  font-family: poppins;
+  font-weight: 500;
+}
+.custom-steps_two .ant-steps-item-process .ant-steps-item-icon {
+  background-color: #9835ff;
+  border-color: #9835ff;
+}
+
+.custom-steps_two .ant-steps-item-process .ant-steps-item-icon .ant-steps-icon {
+  color: #fff;
+}
 .custom-steps {
   font-family: poppins;
   font-weight: 500;
