@@ -325,31 +325,31 @@ function CreateQuiz() {
                 );
                 case 4:
                     return (
-                        <div>
+                        <div className='font-poppins lg:w-5/6 mx-auto bg-white p-4 rounded'>
                             <div className="mb-4">
-                                <label className="block mb-2">Grade Release</label>
-                                <select className="w-full p-2 border rounded">
+                                <label className="block mb-1 text-[#404660] font-medium text-base ">Grade Release</label>
+                                <select className="w-full p-2 border rounded outline-none ">
                                     <option value="immediate">Immediately after submission</option>
                                     <option value="manual">Later after manual review</option>
                                 </select>
                             </div>
                             <div className="mb-4">
-                                <label className="block mb-2">Respondents Can See</label>
+                                <label className="block mb-1 text-[#404660] font-medium text-base">Respondents Can See</label>
                                 <div className="flex flex-col">
-                                    <label><input type="checkbox" className="mr-2" /> Missed Questions</label>
+                                    <label><input type="checkbox" className="mr-2 " /> Missed Questions</label>
                                     <label><input type="checkbox" className="mr-2" /> Correct Answers</label>
                                     <label><input type="checkbox" className="mr-2" /> Point Value</label>
                                     <label><input type="checkbox" className="mr-2" /> Answer Explanation</label>
                                 </div>
                             </div>
                             <div className="mb-4">
-                                <label className="block mb-2">Publishing Settings</label>
+                                <label className="block mb-1 text-[#404660] font-medium text-base">Publishing Settings</label>
                                 <div className="flex flex-col">
                                     <label><input type="radio" name="publish" className="mr-2" /> Publish Now</label>
                                     <label><input type="radio" name="publish" className="mr-2" /> Schedule</label>
                                 </div>
                                 <div className="mt-2">
-                                    <label className="block mb-2">Schedule Date & Time</label>
+                                    <label className="block mb-1 text-[#404660] font-medium text-base">Schedule Date & Time</label>
                                     <input type="datetime-local" className="w-full p-2 border rounded" />
                                 </div>
                             </div>

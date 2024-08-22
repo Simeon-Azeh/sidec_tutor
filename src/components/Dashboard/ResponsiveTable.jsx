@@ -4,8 +4,11 @@ import { IoLogoJavascript, IoLogoReact } from "react-icons/io5";
 import { MdWorkHistory } from "react-icons/md";
 import { FaCheckCircle } from 'react-icons/fa';
 import { FaCalendarAlt, FaUsers } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
 
 const ResponsiveTable = () => {
+    const navigate = useNavigate();
   const courses = [
     {
       icon: <IoLogoJavascript size={25} className='text-white p-2 rounded bg-teal-500' />,
@@ -33,6 +36,10 @@ const ResponsiveTable = () => {
     },
   ];
 
+  const handleShowDraft = () => {
+    navigate('/courses/draft'); // Navigate to draft page
+  };
+
   return (
     <div className='bg-white py-6 mt-6 font-poppins border rounded-md'>
       <div className='flex justify-between px-4 mb-2'>
@@ -51,7 +58,7 @@ const ResponsiveTable = () => {
           </thead>
           <tbody>
             {courses.map((course, index) => (
-              <tr key={index} className="border-t hover:bg-gray-50 cursor-pointer">
+              <tr key={index} className="border-t hover:bg-gray-50 cursor-pointer" onClick={handleShowDraft} >
                 <td className="py-4 px-4 flex items-center">
                   {course.icon}
                   <div className="ml-4">
