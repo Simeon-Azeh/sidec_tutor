@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import LoginImg from '/images/LoginImg.png';
 import AmazonLoader from '../../components/Landing/AmazonLoader';
-import { FaEye, FaEyeSlash, FaGoogle, FaFacebook } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { FcGoogle } from "react-icons/fc";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../../../firebaseConfig';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,6 +16,8 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate loading delay
@@ -32,15 +38,35 @@ function Login() {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      console.log('Form values:', { email, password, rememberMe });
-      // Handle login logic here
-      history.push('/dashboard');
+      setLoggingIn(true);
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log('User logged in:', auth.currentUser);
+        navigate('/dashboard');
+      } catch (error) {
+        console.error('Error logging in:', error);
+        setErrors({ general: error.message });
+      } finally {
+        setLoggingIn(false);
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      console.log('User signed in with Google:', auth.currentUser);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+      setErrors({ general: error.message });
     }
   };
 
@@ -101,14 +127,14 @@ function Login() {
                 />
                 Remember me
               </label>
-              <a href="/auth/forgotpassword" className="text-[#9835ff] hover:underline">Forgot Password?</a>
+              <Link to="/auth/forgotpassword" className="text-[#9835ff] hover:underline">Forgot Password?</Link>
             </div>
             <div>
               <button
                 type="submit"
                 className="bg-[#9835ff] text-white w-full p-2 rounded hover:bg-purple-700 transition duration-300 shadow-lg"
               >
-                Login
+                {loggingIn ? <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> : 'Login'}
               </button>
             </div>
             <div className='flex items-center justify-center gap-4 mt-6'>
@@ -120,16 +146,10 @@ function Login() {
               <button
                 type="button"
                 className="flex items-center gap-2 border py-2 px-2 md:px-4 rounded-md w-[100%] justify-center border-gray-400 border-solid hover:translate-y-[-2px] duration-300  font-medium text-[#404660] hover:text-[#9835ff]"
+                onClick={handleGoogleSignIn}
               >
                 <FcGoogle size={20}/>
                 Login with Google
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 border py-2 px-2 md:px-4 rounded-md w-[100%] justify-center border-gray-400 border-solid hover:translate-y-[-2px] duration-300 font-medium text-[#404660] hover:text-[#9835ff]"
-              >
-                <FaFacebook className="text-blue-600" size={20} />
-                Login with Facebook
               </button>
             </div>
           </form>

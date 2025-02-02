@@ -1,4 +1,6 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 import Logo from "/images/SidecLogo.png";
 import AlternateLogo from "/images/Asset 6.png";
 import ProfileAvatar from "/images/avatartwo.avif";
@@ -18,6 +20,7 @@ function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(true);
   const [actionsVisible, setActionsVisible] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [userData, setUserData] = useState({ firstName: "", lastName: "", email: "", avatar: "" });
 
   const toggleDrawer = () => {
     setDrawerVisible(!drawerVisible);
@@ -40,6 +43,20 @@ function Sidebar({ children }) {
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+        }
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const SidebarContent = () => (
@@ -65,13 +82,13 @@ function Sidebar({ children }) {
         </div>
       </SidebarContext.Provider>
       <div className="border-t flex p-3 relative mt-auto">
-        <img src={ProfileAvatar} className="w-12 h-12 rounded-full" alt="" />
+        <img src={userData.avatar || ProfileAvatar} className="w-12 h-12 rounded-full" alt="Avatar" />
         <div
           className={`flex justify-between  items-center ml-3 overflow-hidden transition-all ${expanded ? "w-52" : "w-0"}`}
         >
           <div className="leading-5">
-            <h4 className="text-gray-500 font-semibold">Simeon Azeh</h4>
-            <span className="text-gray-400 text-xs">simeon@gmail.com</span>
+            <h4 className="text-gray-500 font-semibold">{userData.firstName} {userData.lastName}</h4>
+            <span className="text-gray-400 text-xs">{userData.email}</span>
           </div>
           <button onClick={() => setActionsVisible(!actionsVisible)}>
             <IoMdMore size={24} className="text-gray-400" />
@@ -81,7 +98,7 @@ function Sidebar({ children }) {
           <div className="absolute right-0 bottom-12 w-48 bg-white border rounded shadow-lg p-4">
             <ul className="text-gray-500 ">
               <Link to="/settings">
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b flex items-center gap-x-2"><CgProfile /> View Profile</li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b flex items-center gap-x-2"><CgProfile /> View Profile</li>
               </Link>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b flex items-center gap-x-2"> <IoSettingsOutline /> Settings</li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-400 flex items-center gap-x-2"><AiOutlineLogin /> Log Out</li>
@@ -96,11 +113,11 @@ function Sidebar({ children }) {
     <>
       {/* Show toggle button on small screens only */}
       <button
-  className="lg:hidden text-[22px]  fixed top-5 bg-white  p-1 left-6 text-[#404660] z-20 rounded"
-  onClick={toggleDrawer}
->
-  <MenuOutlined size={30} />
-</button>
+        className="lg:hidden text-[22px]  fixed top-5 bg-white  p-1 left-6 text-[#404660] z-20 rounded"
+        onClick={toggleDrawer}
+      >
+        <MenuOutlined size={30} />
+      </button>
       <Drawer
         title="Menu"
         placement="left"

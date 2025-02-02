@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import RegisterImg from '/images/RegisterImg.png';
 import AmazonLoader from '../../components/Landing/AmazonLoader';
-import { FaEye, FaEyeSlash, FaGoogle, FaFacebook } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { FcGoogle } from "react-icons/fc";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth, db } from '../../../firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
+import { Spin, message } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -13,6 +18,8 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [registering, setRegistering] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -39,15 +46,49 @@ function Register() {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      console.log('Form values:', { email, password });
-      // Handle registration logic here
-      // history.push('/dashboard');
+      setRegistering(true);
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, 'users', user.uid), {
+          email,
+          role: 'tutor',
+        });
+
+        console.log('User registered:', user);
+        navigate('/dashboard');
+      } catch (error) {
+        console.error('Error registering user:', error);
+        setErrors({ general: error.message });
+      } finally {
+        setRegistering(false);
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        role: 'tutor',
+      });
+
+      console.log('User signed in with Google:', user);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+      message.error(error.message);
     }
   };
 
@@ -109,9 +150,9 @@ function Register() {
 
   document.title = " Register with sidec";
   return (
-    <div className="w-full  mx-auto lg:py-8 lg:px-8 md:px-0 font-poppins ">
+    <div className="w-full mx-auto lg:py-8 lg:px-8 md:px-0 font-poppins">
       <div className="flex flex-col lg:flex-row items-center bg-white p-8 md:rounded-lg border">
-        <img src={RegisterImg} alt="Register" className="w-full mb-8 md:mb-0  md:w-4/5 lg:w-1/2 h-auto hover:scale-105 duration-300 cursor-pointer" />
+        <img src={RegisterImg} alt="Register" className="w-full mb-8 md:mb-0 md:w-4/5 lg:w-1/2 h-auto hover:scale-105 duration-300 cursor-pointer" />
         <div className="lg:ml-8 w-full md:w-4/5 lg:w-1/2">
           <h2 className="text-xl font-semibold mb-1 text-[#404660]">Create your account</h2>
           <p className='text-gray-400 mb-4'>Sign up to get started</p>
@@ -170,7 +211,7 @@ function Register() {
                 type="submit"
                 className="bg-[#9835ff] text-white w-full p-2 rounded hover:bg-purple-700 transition duration-300 shadow-lg"
               >
-                Register
+                {registering ? <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> : 'Register'}
               </button>
             </div>
             <div className='flex items-center justify-center gap-4 mt-6'>
@@ -182,16 +223,10 @@ function Register() {
               <button
                 type="button"
                 className="flex items-center gap-2 border py-2 px-2 md:px-4 rounded-md w-[100%] justify-center border-gray-400 border-solid hover:translate-y-[-2px] duration-300  font-medium text-[#404660] hover:text-[#9835ff]"
+                onClick={handleGoogleSignIn}
               >
                 <FcGoogle size={20}/>
                Register with Google
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 border py-2 px-2 md:px-4 rounded-md w-[100%] justify-center border-gray-400 border-solid hover:translate-y-[-2px] duration-300 font-medium text-[#404660] hover:text-[#9835ff]"
-              >
-                <FaFacebook className="text-blue-600" size={20} />
-                Register with Facebook
               </button>
             </div>
           </form>

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { DatePicker, message, Spin, AutoComplete } from 'antd';
+import { DatePicker, message, Spin } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import avatarone from '/images/avatarone.png';
 import avatarTwo from '/images/avatartwo.avif';
 import avatarThree from '/images/avatarthree.svg';
-import { Link } from 'react-router-dom';
-import CustomAutoComplete from './CustomAutocomplete';
 
 const subjectOptions = [
   'Mathematics',
@@ -32,9 +30,10 @@ const StepContent = ({
   const [subjects, setSubjects] = useState(formData.subjects || '');
   const [uploading, setUploading] = useState(false);
 
-  const handleSubjectsChange = (value) => {
+  const handleSubjectsChange = (e) => {
+    const value = e.target.value;
     setSubjects(value);
-    handleChange({ target: { name: 'subjects', value } });
+    handleChange({ target: { name: 'subjects', value: value.split(',').map(subject => subject.trim()) } });
   };
 
   const handleCustomUpload = async (event) => {
@@ -43,10 +42,8 @@ const StepContent = ({
 
     setUploading(true);
     try {
-      // Simulate an upload process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await handleUpload(file);
       message.success(`${file.name} uploaded successfully.`);
-      handleUpload(file);  // Handle the uploaded file
     } catch (err) {
       message.error(`${file.name} upload failed.`);
     } finally {
@@ -159,45 +156,46 @@ const StepContent = ({
           ))}
         </div>
       );
-      case 3:
-        return (
-          <form className="flex flex-col font-poppins">
-            <label className="block text-[#404660] font-medium text-sm ">Subjects you teach</label>
-            <p className='text-[#777] text-xs mt-1 mb-4'>Start typing and seperate with a coma</p>
-            <CustomAutoComplete
-              options={subjectOptions}
-              onChange={(value) => handleSubjectsChange(value)}
-            />
-      
-            <label className="block text-[#404660] font-medium text-sm my-4">Level you teach</label>
-            <div className="flex flex-wrap gap-4 mb-4 font-poppins">
-              {["Advanced Level", "Ordinary Level", "Other"].map((level, index) => (
-                <label
-                  key={index}
-                  className={`flex items-center justify-center cursor-pointer py-2 px-6 border rounded-lg transition duration-150 ease-in-out ${formData.currentInstitution?.includes(level) ? 'bg-[#9835ff] text-white' : 'bg-white text-[#404660]'} border-gray-300`}
-                >
-                  <input
-                    type="checkbox"
-                    name="levelyouteach"
-                    value={level}
-                    checked={(formData.currentInstitution || []).includes(level)}
-                    onChange={(e) => {
-                      const selected = (formData.currentInstitution || []).includes(level)
-                        ? formData.currentInstitution.filter(item => item !== level)
-                        : [...(formData.currentInstitution || []), level];
-                      handleChange({ target: { name: 'currentInstitution', value: selected } });
-                    }}
-                    className="hidden"
-                  />
-                  <span className={`text-base font-normal ${formData.currentInstitution?.includes(level) ? '' : ''}`}>
-                    {level}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </form>
-        );
-      
+    case 3:
+      return (
+        <form className="flex flex-col font-poppins">
+          <label className="block text-[#404660] font-medium text-sm ">Subjects you teach</label>
+          <p className='text-[#777] text-xs mt-1 mb-4'>Start typing and separate with a comma</p>
+          <input
+            type="text"
+            value={subjects}
+            onChange={handleSubjectsChange}
+            className="w-full p-2 border rounded outline-none"
+            placeholder="Enter subjects separated by commas"
+          />
+          <label className="block text-[#404660] font-medium text-sm my-4">Level you teach</label>
+          <div className="flex flex-wrap gap-4 mb-4 font-poppins">
+            {["Advanced Level", "Ordinary Level", "Other"].map((level, index) => (
+              <label
+                key={index}
+                className={`flex items-center justify-center cursor-pointer py-2 px-6 border rounded-lg transition duration-150 ease-in-out ${formData.currentInstitution?.includes(level) ? 'bg-[#9835ff] text-white' : 'bg-white text-[#404660]'} border-gray-300`}
+              >
+                <input
+                  type="checkbox"
+                  name="levelyouteach"
+                  value={level}
+                  checked={(formData.currentInstitution || []).includes(level)}
+                  onChange={(e) => {
+                    const selected = (formData.currentInstitution || []).includes(level)
+                      ? formData.currentInstitution.filter(item => item !== level)
+                      : [...(formData.currentInstitution || []), level];
+                    handleChange({ target: { name: 'currentInstitution', value: selected } });
+                  }}
+                  className="hidden"
+                />
+                <span className={`text-base font-normal ${formData.currentInstitution?.includes(level) ? '' : ''}`}>
+                  {level}
+                </span>
+              </label>
+            ))}
+          </div>
+        </form>
+      );
     case 4:
       return (
         <div className='font-poppins'>
@@ -254,8 +252,8 @@ const StepContent = ({
             <div><h2 className='text-[#404660] font-medium text-base'>Name:</h2> {formData.firstname} {formData.lastname}</div>
             <div><h2 className='text-[#404660] font-medium text-base'>Country:</h2> {formData.country}</div>
             <div><h2 className='text-[#404660] font-medium text-base'>City:</h2> {formData.city}</div>
-            <div><h2 className='text-[#404660] font-medium text-base'>Date of Birth:</h2> </div>
-            <div><h2 className='text-[#404660] font-medium text-base'>Subjects:</h2> {formData.subjects}</div>
+            <div><h2 className='text-[#404660] font-medium text-base'>Date of Birth:</h2> {formData.dateOfBirth}</div>
+            <div><h2 className='text-[#404660] font-medium text-base'>Subjects:</h2> {formData.subjects.join(', ')}</div>
             <div><h2 className='text-[#404660] font-medium text-base'>Level you teach:</h2> {(formData.currentInstitution || []).join(', ')}</div>
             {/* Add any other information you want to display here */}
           </div>

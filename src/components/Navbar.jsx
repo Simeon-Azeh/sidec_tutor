@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 import AvatarImg from "/images/avatartwo.avif";
 import FlagEN from "/images/en-flag.png"; 
 import FlagES from "/images/fr-flag.png"; 
@@ -12,6 +14,7 @@ function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
+  const [userData, setUserData] = useState({ firstName: "", avatar: "" });
 
   useEffect(() => {
     const currentHour = new Date().getHours();
@@ -22,6 +25,20 @@ function Navbar() {
     } else {
       setGreeting("Good evening");
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+        }
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const toggleDropdown = () => {
@@ -40,7 +57,7 @@ function Navbar() {
   return (
     <div className="flex bg-white justify-center md:flex-row md:justify-between items-center px-10 sticky top-0 md:px-14 py-4 font-poppins">
       <h1 className="text-lg hidden lg:flex items-center gap-2 font-semibold text-gray-500">
-        {greeting}, <span className="text-[#9835ff] text-[22px]">Tutor Simeon!</span>
+        {greeting}, <span className="text-[#9835ff] text-[22px]">Tutor {userData.firstName}!</span>
         <MdWavingHand className="wave-icon" />
       </h1>
       <div className="flex items-center gap-4 ml-auto">
@@ -75,7 +92,7 @@ function Navbar() {
         <div className="relative">
           <div className="w-12">
             <img
-              src={AvatarImg}
+              src={userData.avatar || AvatarImg}
               alt="Avatar" 
               className="w-full object-contain rounded-full border border-white shadow-md cursor-pointer"
               onClick={toggleDropdown}
